@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  /*noinspection CssUnresolvedCustomProperty*/
+  --font-sans: var(--font-geist-sans);
+  /*noinspection CssUnresolvedCustomProperty*/
+  --font-mono: var(--font-geist-mono);
+
+  @keyframes blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+  --animate-blink: blink 1s steps(1) infinite;
+
+  @keyframes flicker {
+    0%,
+    100%,
+    50% {
+      opacity: 1;
+    }
+    10%,
+    90% {
+      opacity: 0.995;
+    }
+    20%,
+    60% {
+      opacity: 0.99;
+    }
+    30%,
+    70% {
+      opacity: 0.997;
+    }
+    40%,
+    80% {
+      opacity: 0.992;
+    }
+  }
+  --animate-flicker: flicker 1.2s infinite alternate;
+
+  @keyframes move-bg {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 100px 100px;
+    }
+  }
+  --animate-move-bg-steps: move-bg 0.4s steps(8) infinite;
+
+  @keyframes move-bg-y {
+    0% {
+      background-position-y: 0;
+    }
+    100% {
+      background-position-y: 100px;
+    }
+  }
+  --animate-move-bg-y-linear: move-bg-y 8s linear infinite;
+}
+
+@layer utilities {
+  .text-shadow-glow-green {
+    text-shadow:
+      0 0 2px #00ff66,
+      0 0 10px #00ff66;
+  }
+
+  .shadow-cyan-glow {
+    box-shadow:
+      0 0 20px 8px #00f6ff,
+      0 0 40px 16px #00f6ff55;
+  }
+  .shadow-cyan-glow:hover {
+    box-shadow:
+      0 0 30px 16px #00f6ff,
+      0 0 60px 24px #00f6ff88;
+  }
+
+  .bg-repeating-scanlines {
+    background-image: repeating-linear-gradient(
+      white 0 1px,
+      transparent 1px 24px
+    );
+  }
+  .bg-dome {
+    background: radial-gradient(
+      ellipse at 50% 50%,
+      rgba(255, 255, 255, 0.45) 0%,
+      rgba(0, 255, 102, 0.1) 55%,
+      rgba(0, 0, 0, 0.65) 85%,
+      rgba(0, 0, 0, 0.95) 100%
+    );
+  }
+  .bg-noise {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%224%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/></svg>");
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
