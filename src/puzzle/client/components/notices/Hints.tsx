@@ -6,7 +6,7 @@ import { useStore } from "@/puzzle/client/store/store";
 import { Hint } from "@/puzzle/domain-model";
 
 export const Hints: FC = () => {
-  const { hints, riddleKey, requestNextHint } = useStore();
+  const { hints, riddleKey, requestNextHint, acceptsInput } = useStore();
   const [openKey, setOpenKey] = useState<number | null>(null);
 
   const canRequestNextHint = hints.every(
@@ -90,11 +90,12 @@ export const Hints: FC = () => {
           </p>
         )}
       </div>
-      {canRequestNextHint && (
+      {acceptsInput && canRequestNextHint && (
         <button
           onClick={() => {
-            requestNextHint();
-            setOpenKey(riddleKey);
+            requestNextHint().then(() => {
+              setOpenKey(riddleKey);
+            });
           }}
           className="mt-4 rounded bg-cyan-300 px-4 py-2 text-sm font-bold text-gray-900 hover:bg-cyan-400"
           aria-label="Einen weiteren Hinweis erhalten"

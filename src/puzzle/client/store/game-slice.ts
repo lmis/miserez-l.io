@@ -68,37 +68,37 @@ export const gameSlice: StateCreator<Store, [], [], GameSlice> = (
   initialize: async (lineWidth: number, initialItem: TerminalItem) => {
     const storedState = loadGameState();
 
-    if (
-      !storedState ||
-      !(await validateToken(storedState.token, {
+    const hasValidStoredState =
+      storedState &&
+      (await validateToken(storedState.token, {
         key: storedState.riddleKey,
         hints: storedState.hints,
-      }))
-    ) {
-      set((state) => ({
-        ...state,
-        token: null,
-        riddleKey: 0,
-        gameLocation: GameLocation.HEALTH_WARNING_AND_PRIVACY,
-        locationHistory: [GameLocation.HEALTH_WARNING_AND_PRIVACY],
-        hints: [],
-        terminalItems: [initialItem],
-        lineWidth,
-        queue: [initialItem],
       }));
-    } else {
-      set((state) => ({
-        ...state,
-        ...storedState,
-        lineWidth,
-        display: storedState.terminalItems.map((i) =>
-          limitLineWidth(lineWidth, i),
-        ),
-        acceptsInput: !isCongratulations(
-          storedState.terminalItems[storedState.terminalItems.length - 1],
-        ),
-      }));
-    }
+    set((state) =>
+      hasValidStoredState
+        ? {
+            ...state,
+            ...storedState,
+            lineWidth,
+            display: storedState.terminalItems.map((i) =>
+              limitLineWidth(lineWidth, i),
+            ),
+            acceptsInput: !isCongratulations(
+              storedState.terminalItems[storedState.terminalItems.length - 1],
+            ),
+          }
+        : {
+            ...state,
+            token: null,
+            riddleKey: 0,
+            gameLocation: GameLocation.HEALTH_WARNING_AND_PRIVACY,
+            locationHistory: [GameLocation.HEALTH_WARNING_AND_PRIVACY],
+            hints: [],
+            terminalItems: [initialItem],
+            lineWidth,
+            queue: [initialItem],
+          },
+    );
   },
   requestNextHint: async () => {
     const res = await getNextHint(get().token);

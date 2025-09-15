@@ -7,16 +7,11 @@ export const validateToken = async (
   token: string | null,
   stored: { key: number; hints: Hint[] },
 ): Promise<boolean> => {
-  const content = readJwtContent(token);
+  const { key = 0, hint = null } = readJwtContent(token) ?? {};
 
-  if (
-    stored.key !== content?.key ||
-    stored.hints.some((h) => h.key > content.key)
-  ) {
+  if (stored.key !== key || stored.hints.some((h) => h.key > key)) {
     return false;
   }
 
-  return stored.hints.every(
-    (h) => h.key !== content.key || h.number <= (content.hint ?? -1),
-  );
+  return stored.hints.every((h) => h.key !== key || h.number <= (hint ?? -1));
 };

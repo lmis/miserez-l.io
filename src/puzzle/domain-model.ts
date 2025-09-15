@@ -22,19 +22,19 @@ export interface HintResult {
 }
 
 export enum GameLocation {
-  TERMINAL,
-  SAFEHOUSE,
-  AGENTS,
   HEALTH_WARNING_AND_PRIVACY,
   LEGAL_NOTICE,
-  PROLOGUE,
   GAME_RULES,
-  HELP,
+  PROLOGUE,
+  SAFEHOUSE,
+  TERMINAL,
   ASHTRAY,
   COFFE_CUP,
   BRIEFCASE,
+  AGENTS,
   AGENT_BRAUTKLEID,
   AGENT_STOPPSCHILD,
+  HELP,
 }
 
 export type TerminalItem = {
