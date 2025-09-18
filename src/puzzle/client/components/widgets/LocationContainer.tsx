@@ -1,8 +1,7 @@
 "use client";
 
-import React, { FC, PropsWithChildren, useState } from "react";
+import React, { FC, PropsWithChildren } from "react";
 
-import clsx from "clsx";
 import Image from "next/image";
 
 import { FadeIn } from "@/puzzle/client/components/widgets/FadeIn";
@@ -21,29 +20,26 @@ export const LocationContainer: FC<PropsWithChildren<Props>> = ({
   children,
 }) => {
   const { gameLocation: currentLocation } = useStore();
-  const [loading, setLoading] = useState(true);
+  const [ready, setReady] = React.useState(false);
 
   if (currentLocation !== gameLocation) {
     return null;
   }
   return (
     <div className="relative inline-block">
-      <FadeIn>
+      <FadeIn ready={ready}>
         <Image
           width={1024}
           height={800}
           quality={90}
-          className={clsx(
-            "object-contain object-center transition-all duration-300",
-            loading ? "opacity-1" : "opacity-100",
-          )}
+          className="object-contain object-center"
           priority={[
             GameLocation.HEALTH_WARNING_AND_PRIVACY,
             GameLocation.SAFEHOUSE,
           ].includes(gameLocation)}
           src={getLocationImageUrl(gameLocation)}
+          onLoad={() => setReady(true)}
           alt={`Hintergrund: ${name}`}
-          onLoad={() => setLoading(false)}
         />
         <div className="absolute inset-0 flex items-center justify-center">
           {children}

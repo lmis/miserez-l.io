@@ -2,21 +2,22 @@
 
 import React, { FC, useEffect, useState } from "react";
 
+import clsx from "clsx";
+
+import { enumValues } from "@/lib/enum";
 import { useIsLg } from "@/lib/media-queries";
 import { Locations } from "@/puzzle/client/components/locations/Locations";
 import { NavBar } from "@/puzzle/client/components/nav/NavBar";
 import { getLocationImageUrl } from "@/puzzle/client/location-images";
 import { useStore } from "@/puzzle/client/store/store";
-import { TerminalItem } from "@/puzzle/domain-model";
+import { GameLocation, TerminalItem } from "@/puzzle/domain-model";
 
 interface Props {
   initialItem: TerminalItem;
 }
+
 export const Game: FC<Props> = ({ initialItem }) => {
   const { gameLocation, initialize } = useStore();
-  const [displayedImageUrl, setDisplayedImageUrl] = useState(
-    getLocationImageUrl(gameLocation),
-  );
   const [loaded, setLoaded] = useState(false);
   const isLg = useIsLg();
 
@@ -43,17 +44,6 @@ export const Game: FC<Props> = ({ initialItem }) => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  useEffect(() => {
-    const newUrl = getLocationImageUrl(gameLocation);
-    if (newUrl === displayedImageUrl) {
-      return;
-    }
-
-    const img = new window.Image();
-    img.src = newUrl;
-    img.onload = () => setDisplayedImageUrl(newUrl);
-  }, [gameLocation, displayedImageUrl]);
-
   if (!loaded) {
     return null;
   }
@@ -61,12 +51,19 @@ export const Game: FC<Props> = ({ initialItem }) => {
   return (
     <div className="flex size-full items-center justify-center">
       <div className="absolute inset-0 -z-40 bg-black" />
-      <div
-        className="absolute inset-0 -z-40 bg-cover bg-center bg-no-repeat blur-[100px] transition-all duration-1200"
-        style={{
-          backgroundImage: `url(${displayedImageUrl})`,
-        }}
-      />
+      {/* Render all background images eagerly and transition via opacity to handle arbitrary cross-fades in all browsers. */}
+      {enumValues(GameLocation).map((location) => (
+        <div
+          key={location}
+          className={clsx(
+            "absolute inset-0 -z-40 bg-cover bg-center bg-no-repeat blur-[100px] transition-all duration-1200",
+            gameLocation === location ? "opacity-100" : "opacity-0",
+          )}
+          style={{
+            backgroundImage: `url(${getLocationImageUrl(location)})`,
+          }}
+        />
+      ))}
       <NavBar className="absolute top-8 right-8 z-40" />
       <Locations />
     </div>
