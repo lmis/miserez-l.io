@@ -8,7 +8,11 @@ export const readJwtContent = (token: string | null): JWTContent | null => {
   if (!token) {
     return null;
   }
-  return jwt.verify(token, JWT_SECRET) as JWTContent;
+  try {
+    return jwt.verify(token, JWT_SECRET) as JWTContent;
+  } catch {
+    return null;
+  }
 };
 
 export const createJwt = (content: JWTContent): string =>

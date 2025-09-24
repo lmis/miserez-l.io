@@ -86,7 +86,7 @@ export const Hints: FC = () => {
         })}
         {!canRequestNextHint && (
           <p className="mb-2 text-sm">
-            Zu Rätsel {riddleKey + 1} hat es keine weiteren Hinweise.
+            Zu Rätsel {riddleKey + 1} gibt es keine weiteren Hinweise.
           </p>
         )}
       </div>

@@ -8,7 +8,7 @@ interface PageProps {
 }
 
 const Page = async ({ params }: PageProps) => {
-  if ((await params).token === PUZZLE_TOKEN) {
+  if ((await params).token.toLowerCase() === PUZZLE_TOKEN.toLowerCase()) {
     return <PuzzleMain />;
   }
   return notFound();
